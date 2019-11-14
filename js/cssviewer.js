@@ -1044,6 +1044,7 @@ function CssViewerKeyMap(e) {
 }
 
 function Custom_CSSViewerOutlineElements() {
+	var found = false;
 	var document = GetCurrentDocument();
 	var configJSONPath = "data/config.json";
 	var configJSON = {};
@@ -1088,25 +1089,30 @@ function Custom_CSSViewerOutlineElements() {
 					console.log("FAILED ",themeElement,"Checking ",key,"expected value ",configJSON.assertions[ctr].assert.computed[key],"found ",element.getPropertyValue(key));
 					//themeElement.style.outline = '1px dashed #f00';	
 					themeElement.setAttribute("data-assertionFailed","true");
+					if (!found) found = true;
 				}
 			}
 		}		
-	}		
+	}	
+	return found;	
 }
 
 /*
 * CSSViewer entry-point
 */
 cssViewer = new CSSViewer();
-
-if ( cssViewer.IsEnabled() ){
+var found = Custom_CSSViewerOutlineElements();
+if ( !found || cssViewer.IsEnabled() ){
 	cssViewer.Disable();  
 }
-else{
+else if (found) {
 	cssViewer.Enable(); 
 }
+if (!found) {
+	cssViewerInsertMessage( "All Good !!." );
+}
 
-Custom_CSSViewerOutlineElements();
+
 
 // Set event handler for the CssViewer 
 document.onkeydown = CssViewerKeyMap;

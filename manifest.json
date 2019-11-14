@@ -35,10 +35,8 @@
 		"tabs",
 		"http://*/*", 
 		"https://*/*", 
-		"file://*/*", 
-		"chrome-extension://*/*",
-		"contextMenus",
-		"fileSystemProvider",
+		"file://*/*", 		
+		"contextMenus",		
 		"storage"
 	] ,
 	"file_system_provider_capabilities": {

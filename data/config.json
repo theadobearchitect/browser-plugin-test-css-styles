@@ -1,7 +1,7 @@
 {
    "assertions": [
         {
-            "query": ".h1",
+            "query": "gg",
             "assert":{
                 "computed": {
                     "font-size":"6rem",

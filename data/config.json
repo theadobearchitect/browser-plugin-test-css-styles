@@ -1,10 +1,11 @@
 {
    "assertions": [
         {
-            "query": ".spectrum--lightest h2",
+            "query": ".h1",
             "assert":{
                 "computed": {
-                    "line-height":"41px"
+                    "font-size":"6rem",
+                    "font-weight":"30"
                 }                
             }
         },
@@ -12,7 +13,7 @@
             "query": ".spectrum--lightest h3",
             "assert":{
                 "computed": {
-                    "letter-spacing":"normal1"
+                    "letter-spacing":"normal"
                 }                
             }
         }        

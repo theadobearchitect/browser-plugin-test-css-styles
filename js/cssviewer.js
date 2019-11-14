@@ -556,7 +556,7 @@ function CSSViewerMouseOver(e)
 
 	// Outline element
 	if (this.tagName != 'body') {
-		this.style.outline = '1px dashed #f00';
+		//this.style.outline = '1px dashed #f00';
 		CSSViewer_current_element = this;
 	}
 	
@@ -881,6 +881,15 @@ CSSViewer.prototype.Enable = function()
 		block = this.CreateBlock();
 		document.body.appendChild(block);
 		this.AddEventListeners();
+		
+		var css = document.createElement('style');
+		css.type = 'text/css'; 
+		var styles = '[data-assertionFailed="true"] {outline:1px dashed #f00}'; 
+        		
+		css.appendChild(document.createTextNode(styles)); 
+              
+		/* Append style to the tag name */ 
+		document.getElementsByTagName("head")[0].appendChild(css); 
 
 		return true;
 	}
@@ -899,7 +908,12 @@ CSSViewer.prototype.Disable = function()
 	if (block) {
 		document.body.removeChild(block); 
 		this.RemoveEventListeners();
-
+		var failedEls = document.querySelectorAll('[data-assertionFailed="true"]');		
+		if (failedEls) {
+			for (var i=0;i<failedEls.length;i++) {
+				failedEls[i].removeAttribute("data-assertionFailed");
+			}
+		}
 		return true;
 	}
 
@@ -1005,7 +1019,7 @@ function CssViewerKeyMap(e) {
 	// ESC: Close the css viewer if the cssViewer is enabled.
 	if ( e.keyCode === 27 ){
 		// Remove the red outline
-		//CSSViewer_current_element.style.outline = '';
+		CSSViewer_current_element.style.outline = '';
 		cssViewer.Disable();
 	}
 	
@@ -1038,15 +1052,14 @@ function Custom_CSSViewerOutlineElements() {
 	  }, function(items) {
 		configJSONPath = items.configJSONPath;
 	  });
-	console.log(configJSONPath);
+	
 	
 	var xhr = new XMLHttpRequest();
 	xhr.open("GET", chrome.runtime.getURL(configJSONPath), false);
 	xhr.onreadystatechange = function() {
 	  if (xhr.readyState == 4) {
 		// JSON.parse does not evaluate the attacker's scripts.
-		configJSON = JSON.parse(xhr.responseText);
-		console.log(configJSON);
+		configJSON = JSON.parse(xhr.responseText);		
 	  }
 	}
 	xhr.send();
@@ -1058,7 +1071,7 @@ function Custom_CSSViewerOutlineElements() {
 		if ( ! themeElements ) {
 			return;
 		}
-		console.log(themeElements);
+		
 		
 		
 		for (var i=0;i<themeElements.length;i++) {
@@ -1072,8 +1085,8 @@ function Custom_CSSViewerOutlineElements() {
 			for (var key in configJSON.assertions[ctr].assert.computed) {
 								
 				if (configJSON.assertions[ctr].assert.computed[key] != element.getPropertyValue(key)) {
-					console.log("FAILED ",key," against value",configJSON.assertions[ctr].assert.computed[key],element.getPropertyValue(key));
-					themeElement.style.outline = '1px dashed #f00';	
+					console.log("FAILED ",themeElement,"Checking ",key,"expected value ",configJSON.assertions[ctr].assert.computed[key],"found ",element.getPropertyValue(key));
+					//themeElement.style.outline = '1px dashed #f00';	
 					themeElement.setAttribute("data-assertionFailed","true");
 				}
 			}
